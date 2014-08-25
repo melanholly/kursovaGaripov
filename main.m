@@ -7,3 +7,6 @@ m=2;
 C=(0.0012+0.0002*z-0.001*z*z)/(0.5-0.9656*z+0.4656*z*z);% kontrolera
 H0=(1-1.56*z+1.045*z*z-0.3338*z*z*z)/(1-2.35*z+2.09*z*z-0.6675*z*z*z); %filtura
 r=idinput(1000); % pravim si 1000 tochkov unikalen signal
+% r=linspace(1,1,1000)';
+t=1:1000;
+R2=[t',r];
