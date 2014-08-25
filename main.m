@@ -10,3 +10,4 @@ r=idinput(1000); % pravim si 1000 tochkov unikalen signal
 % r=linspace(1,1,1000)';
 t=1:1000;
 R2=[t',r];
+sim('data_generator_plant')
