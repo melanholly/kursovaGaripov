@@ -22,16 +22,24 @@ figure,step(H0),legend toggle;
 figure,bode(H0),legend toggle;
 savefigs('images/harakteristiki-na-obekta-');
 %% Poluchavane na modelite
+arx_model=arx(sample_data,[2 2 1]);
+figure,resid(arx_model,sample_data);
+% figure,compare(sample_data,arx_model);
+figure, step(G0,arx_model);
 iv4optimalen=iv4(sample_data,[2 2 1]);
-figure,resid(iv4optimalen,d);
-figure,compare(d,iv4optimalen);
+figure,resid(iv4optimalen,sample_data);
+% figure,compare(sample_data,iv4optimalen);
 figure, step(G0,iv4optimalen);
 %po-dobre e da se izpolzva ivx kato metod za identifikaciq za da moje da se
 %izpolzvat instrumentalni promenlivi zadavani v aftorska funkciq. ne tezi,
 %koito izchislqva IV4 algorituma na matlab.
-ivx(sample_data,[1 1 1],[0 0 0 0  r(5:end)']') %neoptimalen nachin za
+ivx_model=ivx(sample_data,[1 1 1],[0 0 0 0  r(5:end)']') %neoptimalen nachin za
 %presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
 %nachina deto e opisan v statiite
+ivx_model
+figure,resid(ivx_model,sample_data);
+% figure,compare(sample_data,iv4optimalen);
+figure, step(G0,ivx_model);
 
 
 
