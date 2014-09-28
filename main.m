@@ -20,6 +20,7 @@ figure,step(G0,closed),legend toggle;
 figure, bode(G0,closed),legend toggle;
 figure,step(H0),legend toggle;
 figure,bode(H0),legend toggle;
+savefigs('images/harakteristiki-na-obekta-');
 %% Poluchavane na modelite
 iv4optimalen=iv4(sample_data,[2 2 1]);
 figure,resid(iv4optimalen,d);
