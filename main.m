@@ -10,4 +10,38 @@ r=idinput(1000); % pravim si 1000 tochkov unikalen signal
 % r=linspace(1,1,1000)';
 t=1:1000;
 R2=[t',r];
-sim('data_generator_plant')
+scale = 0.008; % snr ~15dB
+sim('data_generator_plant');
+disp(['SNR: ',num2str(snr(signal_and_noice(:,1),signal_and_noice(:,2)))]);
+closed=feedback(G0*C,1);
+sample_data=iddata(signal_and_noice(2:end,1),r,T0);
+%% Harakteristiki na izsledvanite modeli
+figure,step(G0,closed),legend toggle;
+figure, bode(G0,closed),legend toggle;
+figure,step(H0),legend toggle;
+figure,bode(H0),legend toggle;
+%% Poluchavane na modelite
+iv4optimalen=iv4(sample_data,[2 2 1]);
+figure,resid(iv4optimalen,d);
+figure,compare(d,iv4optimalen);
+figure, step(G0,iv4optimalen);
+%po-dobre e da se izpolzva ivx kato metod za identifikaciq za da moje da se
+%izpolzvat instrumentalni promenlivi zadavani v aftorska funkciq. ne tezi,
+%koito izchislqva IV4 algorituma na matlab.
+ivx(sample_data,[1 1 1],[0 0 0 0  r(5:end)']') %neoptimalen nachin za
+%presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
+%nachina deto e opisan v statiite
+
+
+
+
+
+
+
+
+
+
+
+
+
+
