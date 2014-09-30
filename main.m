@@ -33,11 +33,13 @@ figure, step(G0,iv4optimalen);
 %po-dobre e da se izpolzva ivx kato metod za identifikaciq za da moje da se
 %izpolzvat instrumentalni promenlivi zadavani v aftorska funkciq. ne tezi,
 %koito izchislqva IV4 algorituma na matlab.
-ivx_model=ivx(sample_data,[1 1 1],[0 0 0 0  r(5:end)']') %neoptimalen nachin za
+%%
+i=0;
+instruments=[zeros(1,i),  r(i+1:end)']';
+ivx_model=ivx(sample_data,[2 2 2],instruments) %neoptimalen nachin za
 %presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
 %nachina deto e opisan v statiite
-ivx_model
-figure,resid(ivx_model,sample_data);
+% figure,resid(ivx_model,sample_data);
 % figure,compare(sample_data,iv4optimalen);
 figure, step(G0,ivx_model);
 
