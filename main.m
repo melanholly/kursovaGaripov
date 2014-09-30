@@ -26,6 +26,7 @@ arx_model=arx(sample_data,[2 2 1]);
 figure,resid(arx_model,sample_data);
 % figure,compare(sample_data,arx_model);
 figure, step(G0,arx_model);
+%% iv4
 iv4optimalen=iv4(sample_data,[2 2 1]);
 figure,resid(iv4optimalen,sample_data);
 % figure,compare(sample_data,iv4optimalen);
@@ -33,15 +34,17 @@ figure, step(G0,iv4optimalen);
 %po-dobre e da se izpolzva ivx kato metod za identifikaciq za da moje da se
 %izpolzvat instrumentalni promenlivi zadavani v aftorska funkciq. ne tezi,
 %koito izchislqva IV4 algorituma na matlab.
-%%
-i=0;
+%% izpolzvame zadanieto kato instrumenti 
+close all;
+i=1;
 instruments=[zeros(1,i),  r(i+1:end)']';
-ivx_model=ivx(sample_data,[2 2 2],instruments) %neoptimalen nachin za
+ivx_model=ivx(sample_data,[2 2 2],instruments); %neoptimalen nachin za
 %presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
 %nachina deto e opisan v statiite
 % figure,resid(ivx_model,sample_data);
 % figure,compare(sample_data,iv4optimalen);
-figure, step(G0,ivx_model);
+figure, step(G0,153*ivx_model);
+%%
 
 
 

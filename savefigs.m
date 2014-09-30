@@ -1,4 +1,4 @@
-function ret = savefigs(imence)
+function ret = savefigs(imence,n)
 % This function allows you to quickly save all currently open figures with
 % a custom filename for each in multiple formats.  To use the function
 % simply call savefigs with no arguments, then follow the prompts
@@ -13,28 +13,31 @@ function ret = savefigs(imence)
 %
 % Copyright 2010 Matthew Guidry 
 % matt.guidry ATT gmail DOTT com  (Email reformatted for anti-spam)
+if nargin<2
+    n=2
+end
 
 hfigs = get(0, 'children');                          %Get list of figures
 
 for m = length(hfigs):-1:1
     figure(hfigs(m));                              %Bring Figure to foreground
     filename = [imence num2str(hfigs(m))];%Prompt user
-    hline = findobj(hfigs(m), 'type', 'line');
-    set(hline,'LineWidth',2);
-    ax = findobj(gcf,'type','axes');
-    if length(ax)~=3||length(hline)~=5
-    for i=1:length(hline)
-      if mod(i,2)==0
-        set(hline(i),'LineStyle','--');
-        set(hline(i),'Color',[.3,.3,.3]);
-      else
-         set(hline(i),'Color',[.6,.6,.6]);
-         set(hline(i),'LineStyle','-');
-      end
-    end
-    else
-         set(hline,'Color',[.3,.3,.3]);
-    end
+%     hline = findobj(hfigs(m), 'type', 'line');
+%     set(hline,'LineWidth',2);
+%     ax = findobj(gcf,'type','axes');
+%     if length(ax)~=3||length(hline)~=5
+%     for i=1:length(hline)
+%       if mod(i,n)==0
+%         set(hline(i),'LineStyle','--');
+%         set(hline(i),'Color',[.3,.3,.3]);
+%       else
+%          set(hline(i),'Color',[.6,.6,.6]);
+%          set(hline(i),'LineStyle','-');
+%       end
+%     end
+%     else
+%          set(hline,'Color',[.3,.3,.3]);
+%     end
 
 %     if strcmp(filename, '0')                        %Skip figure when user types 0
 %         continue
