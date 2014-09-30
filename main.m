@@ -32,7 +32,7 @@ figure, step(G0,arx_model);
 iv4optimalen=iv4(sample_data,[2 2 1]);
 figure,resid(iv4optimalen,sample_data);
 % figure,compare(sample_data,iv4optimalen);
-figure, step(G0,iv4optimalen);
+figure, step(G0,2.5*iv4optimalen);
 %po-dobre e da se izpolzva ivx kato metod za identifikaciq za da moje da se
 %izpolzvat instrumentalni promenlivi zadavani v aftorska funkciq. ne tezi,
 %koito izchislqva IV4 algorituma na matlab.
@@ -40,32 +40,94 @@ figure, step(G0,iv4optimalen);
 close all;
 i=1;
 instruments=[zeros(1,i),  r(i+1:end)']';
-ivx_model=ivx(sample_data,[2 2 2],instruments); %neoptimalen nachin za
+ivx_model=ivx(sample_data,[2 2 i+1],instruments); %neoptimalen nachin za
 %presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
 %nachina deto e opisan v statiite
 % figure,resid(ivx_model,sample_data);
 % figure,compare(sample_data,iv4optimalen);
 figure, step(G0,153*ivx_model);
-%% izpozvane na razshireni instrumentalni promenlivi 
-%formiram vectora eta
-% ci=H0.num{1,1};
-% ci = ci(ci~=0);
-% di=H0.den{1,1};
-% di = di(di~=0);
-% eta=[di ci]';
-rb=500;
-y=-signal;
-u=signal_and_noice(:,3);
-fi=[y',u'];
-fir=r(1:rb);
-L=1/H0;
+%% closed-loop basic IV method
+titas=0;
+monteCarlo=100;
+N=1000;
+n=1;
+rb=2;
+for intr=1:monteCarlo
+    sim('data_generator_plant');
+    signal=signal_and_noice(:,1);
+    noice=signal_and_noice(:,2);
+    sample_data=iddata(signal_and_noice(2:end,1),r,T0);
+    y=-signal;
+    u=signal_and_noice(:,3);
+    tempsum=0;
+    tempsum2=0;
+    for t=rb+1:N
+        fic=[-y(t-1:-1:t-n),r(t-1:-1:t-n)]';
+        fi=[-y(t-1:-1:t-n),u(t-1:-1:t-n)]';
+        fir=r(t-1:-1:t-rb);
+        tempsum=tempsum+fir*fi';
+        tempsum2=tempsum2+fir*y(t);
+    end
+    tempsum=tempsum/(N-rb-1);
+    tempsum2=tempsum2/(N-rb-1);
+    titas=titas+tempsum^-1*tempsum2;
+end
+titas=titas/monteCarlo;
+result=tf(titas(2),[1 titas(1)],T0,'variable','z^-1');
+disp(result);
+disp(monteCarlo);
+%     0.5 z^-1
+%   ------------
+%   1 - 0.8 z^-1
+%% Closed-loop extended IV method
 
-
-
-
-
-
-
+titas=0;
+monteCarlo=100;
+N=1000;
+n=1;
+rb=2;
+Q=1000*eye(n);
+L=eye(n);
+xmin=100000;
+for intr=1:monteCarlo
+    sim('data_generator_plant');
+    signal=signal_and_noice(:,1);
+    noice=signal_and_noice(:,2);
+    sample_data=iddata(signal_and_noice(2:end,1),r,T0);
+    y=-signal;
+    u=signal_and_noice(:,3);
+    tempsum=0;
+    tempsum2=0;
+    for t=rb+1:N
+        fic=[-y(t-1:-1:t-n),r(t-1:-1:t-n)]';
+        fi=[-y(t-1:-1:t-n),u(t-1:-1:t-n)]';
+        fir=r(t-1:-1:t-rb);
+        tempsum=tempsum+fir*L*fi';
+        tempsum2=tempsum2+fir*L*y(t);
+    end
+    tempsum=tempsum/(N-rb-1);
+    tempsum2=tempsum2/(N-rb-1);
+    xc=tempsum^-1*tempsum2;
+    x=xc'*Q*xc;
+    if(x<xmin)
+        xmin=x;
+        titas=xc;
+    end
+end
+result=tf(titas(2),[1 titas(1)],T0,'variable','z^-1');
+display(titas);
+display(result);
+% titas =
+% 
+%    -0.7300
+%    -0.5252
+% 
+% 
+% result =
+%  
+%      -0.5252
+%   -------------
+%   1 - 0.73 z^-1
 
 
 
