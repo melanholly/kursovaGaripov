@@ -12,7 +12,9 @@ t=1:1000;
 R2=[t',r];
 scale = 0.008; % snr ~15dB
 sim('data_generator_plant');
-disp(['SNR: ',num2str(snr(signal_and_noice(:,1),signal_and_noice(:,2)))]);
+signal=signal_and_noice(:,1);
+noice=signal_and_noice(:,2);
+disp(['SNR: ',num2str(snr(signal,noice))]);
 closed=feedback(G0*C,1);
 sample_data=iddata(signal_and_noice(2:end,1),r,T0);
 %% Harakteristiki na izsledvanite modeli
@@ -44,8 +46,19 @@ ivx_model=ivx(sample_data,[2 2 2],instruments); %neoptimalen nachin za
 % figure,resid(ivx_model,sample_data);
 % figure,compare(sample_data,iv4optimalen);
 figure, step(G0,153*ivx_model);
-%%
-
+%% izpozvane na razshireni instrumentalni promenlivi 
+%formiram vectora eta
+% ci=H0.num{1,1};
+% ci = ci(ci~=0);
+% di=H0.den{1,1};
+% di = di(di~=0);
+% eta=[di ci]';
+rb=500;
+y=-signal;
+u=signal_and_noice(:,3);
+fi=[y',u'];
+fir=r(1:rb);
+L=1/H0;
 
 
 
