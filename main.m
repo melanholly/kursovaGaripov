@@ -73,12 +73,28 @@ for intr=1:monteCarlo
     titas=titas+tempsum^-1*tempsum2;
 end
 titas=titas/monteCarlo;
-result=tf(titas(2),[1 titas(1)],T0,'variable','z^-1');
-disp(result);
+result=tf(-titas(2),[1 titas(1)],T0,'variable','z^-1');
 disp(monteCarlo);
+display(titas);
+display(result);
 %     0.5 z^-1
 %   ------------
 %   1 - 0.8 z^-1
+% 
+% result =
+%  
+%       0.4799
+%   ---------------
+%   1 - 0.8122 z^-1
+%  
+% Sample time: 1 seconds
+% Discrete-time transfer function.
+% 
+% 
+% titas =
+% 
+%    -0.8122
+%    -0.4799
 %% Closed-loop extended IV method
 
 titas=0;
@@ -114,9 +130,12 @@ for intr=1:monteCarlo
         titas=xc;
     end
 end
-result=tf(titas(2),[1 titas(1)],T0,'variable','z^-1');
+result=tf(-titas(2),[1 titas(1)],T0,'variable','z^-1');
 display(titas);
 display(result);
+%     0.5 z^-1
+%   ------------
+%   1 - 0.8 z^-1
 % titas =
 % 
 %    -0.7300
@@ -125,9 +144,53 @@ display(result);
 % 
 % result =
 %  
-%      -0.5252
+%      0.5252
 %   -------------
 %   1 - 0.73 z^-1
+%% Tailor-made IV identification (M1)
+titas=0;
+monteCarlo=10;
+N=1000;
+n=1;
+rb=2;
+Q=C.num{1,1}(C.num{1,1}~=0);
+P=C.den{1,1}(C.den{1,1}~=0);
+L=P;
+xmin=100000;
+for intr=1:monteCarlo
+    sim('data_generator_plant');
+    signal=signal_and_noice(:,1);
+    noice=signal_and_noice(:,2);
+    sample_data=iddata(signal_and_noice(2:end,1),r,T0);
+    e=r-signal;
+    y=-signal;
+    u=signal_and_noice(:,3);
+    tempsum=0;
+    tempsum2=0;
+    for t=rb+1:N
+        fic=[-y(t-1:-1:t-n),r(t-1:-1:t-n)]';
+        fi=[-y(t-1:-1:t-n),u(t-1:-1:t-n)]';
+        fir=r(t-1:-1:t-rb);
+        tempsum=tempsum+fir*L*fi';
+        tempsum2=tempsum2+fir*L*y(t);
+    end
+    tempsum=tempsum/(N-rb-1);
+    tempsum2=tempsum2/(N-rb-1);
+    xc=tempsum^-1*tempsum2;
+    x=xc'*Q*xc;
+    if(x<xmin)
+        xmin=x;
+        titas=xc;
+    end
+end
+result=tf(-titas(2),[1 titas(1)],T0,'variable','z^-1');
+display(titas);
+display(result);
+
+
+
+
+
 
 
 
