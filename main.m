@@ -59,7 +59,6 @@ display(tf(ivx_model.b,ivx_model.a,T0,'variable','z^-1'));
 titas=0;
 monteCarlo=100;
 N=1000;
-n=1;
 rb=2;
 for intr=1:monteCarlo
     sim('data_generator_plant');
@@ -159,10 +158,8 @@ display(result);
 %% Tailor-made IV identification (M1)
 titas=0;
 monteCarlo=100;
-N=1000;
 n=1;
 F=1000*eye(length(r));
-L=P;
 xmin=100000;
 for intr=1:monteCarlo
     sim('data_generator_plant');
@@ -240,7 +237,17 @@ result=tf([0 -titas(2)],[1 titas(1)],T0,'variable','z^-1');
 display(titas);
 display(result);
 step(G0,result);
-
+% titas =
+% 
+%    -0.2901
+%    -0.2470
+% 
+% 
+% result =
+%  
+%     0.247 z^-1
+%   ---------------
+%   1 - 0.2901 z^-1
 
 
 
