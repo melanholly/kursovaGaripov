@@ -46,7 +46,7 @@ display(tf(1000*iv4optimalen.b,iv4optimalen.a,T0,'variable','z^-1'));
 %koito izchislqva IV4 algorituma na matlab.
 %% izpolzvame zadanieto kato instrumenti - variant na M1 
 close all;
-i=2;
+i=1;
 instruments=[zeros(1,i),  r(i+1:end)']';
 ivx_model=ivx(sample_data,[1 1 1],instruments); %neoptimalen nachin za
 %presmqtane no e nachin sega trqbav da oprabotq vektora na istrumentite po
@@ -204,7 +204,7 @@ titas=0;
 monteCarlo=100;
 N=1000;
 n=1;
-rb=m;
+rb=m+n;
 Q=1000*eye(n);
 L=eye(n);
 xmin=100000;
@@ -248,8 +248,17 @@ step(G0,result);
 %     0.247 z^-1
 %   ---------------
 %   1 - 0.2901 z^-1
+%% dalin
+Wd=result
+d=1;
+[ Bin,Bout,Bplus,Bminus ] = bsbu([Wd.num{1}(2:end)]);
 
-
+% proektirane na regulator na dalin
+Ad=Wd.den{1};
+Tsau=2;
+[ Q,P ] = dalin_nomin(Bplus,Bminus,Ad,d,Tsau,T0)
+sim('model',100);
+h=pilot(ScopeData,d,T0,Tsau);
 
 
 
