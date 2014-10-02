@@ -256,11 +256,10 @@ d=1;
 % proektirane na regulator na dalin
 Ad=Wd.den{1};
 Tsau=2;
-[ Q,P ] = dalin_nomin(Bplus,Bminus,Ad,d,Tsau,T0)
+[ Q,P ] = dalin_nomin(Bplus,Bminus,Ad,d,Tsau,T0);
+Wd=G0;
 sim('model',100);
 h=pilot(ScopeData,d,T0,Tsau);
-
-
 
 
 
