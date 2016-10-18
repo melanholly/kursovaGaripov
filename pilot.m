@@ -4,7 +4,7 @@ subplot(1,2,1);
 % gray(h)
 stairs(ScopeData.time,ScopeData.signals(1).values);
 hold on;
-[a,b]=step(tf(1,[Tsau,1])*exp(-(d+2)*T0*tf([1 0],1)),T0*25);
+[a,b]=step(tf(1,[Tsau,1])*exp(-(d+2)*T0*tf([1 0],1)),400);
 plot(b,a,'g');
 hold off;
 title('Izhod na zatvorenata sistema');
